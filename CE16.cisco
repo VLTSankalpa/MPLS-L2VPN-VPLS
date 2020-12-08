@@ -1,0 +1,22 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!! l2vpn (PW)
+conf t
+hostn CE16
+cdp run
+
+int r g0/0-3
+cdp enable
+
+int g0/0
+no shut
+
+int g0/0.1316
+encapsulation dot1q 1316
+ip add 10.13.16.16 255.255.255.0
+do wr
+
+do ping 10.13.16.13
+
+int g0/0.20
+encapsulation dot1q 20
+ip add 20.13.16.16 255.255.255.0
+do wr

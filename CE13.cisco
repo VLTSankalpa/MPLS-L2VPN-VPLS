@@ -1,0 +1,16 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!! l2vpn (PW)
+conf t
+int g0/1
+no shut
+
+int g0/1.1316
+encapsulation dot1q 1316
+ip add 10.13.16.13 255.255.255.0
+do wr
+
+do ping 10.13.16.16
+
+int g0/1.20
+encapsulation dot1q 20
+ip add 20.13.16.13 255.255.255.0
+do wr
