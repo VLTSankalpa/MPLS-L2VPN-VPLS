@@ -1,22 +1,13 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!! l2vpn (Pseudowires)
+!!!!!!!!!!!!!!!!!!!!!!!!!! pw-group-redundancy
 conf t
-int g3
-no shut
-service instance 1316 ethernet
-encap dot1q 1316
-exit
-l2vpn xconnect context VLAN1316_NEIGHBOR
-member 10.1.1.1 1316 encap mpls
-member g3 service-instance 1316
-exit
-do wr
 
 int g3
-service instance 20 ethernet
-encap dot1q 20
+service instance 30 ethernet
+encap dot1q 30
 exit
-l2vpn xconnect context VLAN20_NEIGHBOR
-member 10.1.1.1 20 encap mpls
-member g3 service-instance 20
+l2vpn xconnect context VLAN30_NEIGHBOR
+member 10.1.1.1 30 encapsulation mpls group GROUP priority 10
+member 10.1.1.1 31 encapsulation mpls group GROUP priority 11
+member g3 service-instance 30
 exit
 do wr
