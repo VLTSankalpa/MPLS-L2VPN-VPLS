@@ -1,0 +1,18 @@
+!! Service Provider - Intra AS L2VPN 002
+
+!!!!!!!!!!!!!!!!!!!!!!!!!! Local Switching
+conf t
+hostn CE14
+cdp run
+
+int r g0/0 - 3
+cdp enable
+
+int g0/0
+no shut
+ip add 10.14.15.14 255.255.255.0
+do wr
+
+do ping 10.14.15.15
+do show arp
+do show cdp nei
