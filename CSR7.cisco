@@ -1,39 +1,33 @@
 conf t
-int g3
-no shut
-service instance 10 ethernet
-encapsulation default
-exit
-interface pseudowire 10
-encapsulation mpls
-neighbor 10.0.0.10 10
-exit
-l2vpn xconnect context P2P_VLAN_IOS_XR
-member g3 service-instance 10
-member pseudowire 10
-exit
+hostname CSR7
+no ip domain lookup
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! VPLS With switches as the CE Device
-l2vpn vfi context 157
-vpn id 157
-member 1.1.1.1 17 encapsulation mpls
-member 5.5.5.5 57 encapsulation mpls
-exit
+router isis 1
+ net 00.0000.0000.0007.00
+ is-type level-2-only
+ metric-style narrow
 
-int g4
-no ip address
-no shut
-negotiation auto
-Service-instance 157 ethernet
-encapsulation dot1q 100-101
-exit
+interface Loopback0
+ ip address 10.7.7.7 255.255.255.255
 
-bridge-domain 157
-member vfi 157
-member g4 service-instance 157
+interface GigabitEthernet1
+ no shutdown
+ ip address 10.6.7.7 255.255.255.0
+ ip router isis 1
 
-int g4
-Service-instance 157 ethernet
-encapsulation dot1q 100-101,200-201
+interface GigabitEthernet2
+ no shutdown
+ ip address 10.7.9.7 255.255.255.0
+ ip router isis 1
+
+router isis 1
+ passive-interface Loopback0
+ mpls ldp autoconfig
+
+line con 0
+ exec-timeout 0 0
+
+int r g1-7
+ cdp en
+
+do wr

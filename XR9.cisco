@@ -1,0 +1,76 @@
+hostname XR9
+cdp
+line console
+ exec-timeout 0 0
+!
+interface Loopback0
+ ipv4 address 10.9.9.9 255.255.255.255
+!
+interface GigabitEthernet0/0/0/0
+ cdp
+ ipv4 address 10.4.9.9 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/0/0/1
+ cdp
+ ipv4 address 10.6.9.9 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/0/0/2
+ cdp
+ ipv4 address 10.7.9.9 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/0/0/3
+ cdp
+ ipv4 address 10.9.10.9 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/0/0/4
+ cdp
+ ipv4 address 10.9.11.9 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/0/0/5
+ cdp
+ ipv4 address 10.9.12.9 255.255.255.0
+ no shutdown
+!
+router isis 1
+ is-type level-2-only
+ net 00.0000.0000.0009.00
+ address-family ipv4 unicast
+  mpls ldp auto-config
+ !
+ interface Loopback0
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/0
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/1
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/2
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/3
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/4
+  address-family ipv4 unicast
+  !
+ !
+ interface GigabitEthernet0/0/0/5
+  address-family ipv4 unicast
+  !
+ !
+!
+mpls ldp
+!
+end

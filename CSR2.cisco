@@ -1,24 +1,23 @@
 conf t
-
-hostname CSR5
+hostname CSR2
 no ip domain lookup
 
 router isis 1
- net 00.0000.0000.0005.00
+ net 00.0000.0000.0002.00
  is-type level-2-only
  metric-style narrow
 
 interface Loopback0
- ip address 10.5.5.5 255.255.255.255
+ ip address 10.2.2.2 255.255.255.255
 
 interface GigabitEthernet1
  no shutdown
- ip address 10.5.8.5 255.255.255.0
+ ip address 10.2.8.2 255.255.255.0
  ip router isis 1
 
 interface GigabitEthernet2
  no shutdown
- ip address 10.4.5.5 255.255.255.0
+ ip address 10.2.6.2 255.255.255.0
  ip router isis 1
 
 router isis 1
@@ -30,5 +29,5 @@ line con 0
 
 int r g1-7
  cdp en
- 
+
 do wr

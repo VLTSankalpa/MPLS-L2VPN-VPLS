@@ -1,0 +1,53 @@
+conf t
+hostname CSR4
+no ip domain lookup
+
+router isis 1
+ net 00.0000.0000.0004.00
+ is-type level-2-only
+ metric-style narrow
+
+interface Loopback0
+ ip address 10.4.4.4 255.255.255.255
+
+interface GigabitEthernet1
+ no shutdown
+ ip address 10.4.8.4 255.255.255.0
+ ip router isis 1
+
+interface GigabitEthernet2
+ no shutdown
+ ip address 10.4.9.4 255.255.255.0
+ ip router isis 1
+
+interface GigabitEthernet3
+  no shutdown
+  ip address 10.1.4.4 255.255.255.0
+  ip router isis 1
+
+interface GigabitEthernet4
+   no shutdown
+   ip address 10.3.4.4 255.255.255.0
+   ip router isis 1
+
+interface GigabitEthernet5
+   no shutdown
+   ip address 10.4.5.4 255.255.255.0
+   ip router isis 1
+
+interface GigabitEthernet6
+    no shutdown
+    ip address 10.4.12.4 255.255.255.0
+    ip router isis 1
+
+router isis 1
+ passive-interface Loopback0
+ mpls ldp autoconfig
+
+line con 0
+ exec-timeout 0 0
+
+int r g1-7
+ cdp en
+
+do wr

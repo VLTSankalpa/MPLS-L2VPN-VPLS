@@ -1,155 +1,33 @@
-! Service Provider - Intra AS L2VPN 002
-!!!!!!!!!!!!!!!!!!!!!!!!!! Local Switching
-int g4
-no shut
-int g5
-no shut
-exit
-connect L2VPN g4 g5
-do show connect
-
-!!!!!!!!!!!!!!!!!!!!!!!!!! Bridge-domain (new config)
-bridge-domain 23
-member g4 service-instance 23
-member g5 service-instance 23
-exit
-
-int g4
-service instance 23 ethernet
-encapsulation default
-
-int g5
-service instance 23 ethernet
-encapsulation default
-
-show bridge-domain
-
-! EFP - ethernet flow point
-!!!!!!!!!!!!!!!!!!!!!!!!!! Bridge-domain (old config)
-int g4
-service instance 23 ethernet
-bridge-domain 23
-encapsulation default
-int g5
-service instance 23 ethernet
-bridge-domain 23
-encapsulation default
-
-!!!!!!!!!!!!!!!!!!!!!!!!!! Xconnect
-int g6
-no shut
-xconnect 1.1.1.1 31 encapsulation mpls
-
-do show xconnect all
-do show xconnect all detail
-do show mpls forwarding-table
-do show mpls forwarding-table 1.1.1.1
-do traceroute 1.1.1.1 source loopback 0
-do show mpls forwarding-table labels 45 detail
-do show mpls l2 vc detail
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!! xconnect with Pseudowires class
 conf t
-Pseudowires-class PW_CLASS
-! lot of options like interworking, load balanceing under PW_CLASS
-encapsulation mpls
-exit
-int g6
-xconnect 1.1.1.1 31 pw-class PW_CLASS
+hostname CSR3
+no ip domain lookup
 
+router isis 1
+ net 00.0000.0000.0003.00
+ is-type level-2-only
+ metric-style narrow
 
-!!!!!!!!!!!!!!!!!!!!!!!!!! l2vpn (Pseudowires)
-int g5
-service instance 10 ethernet
-encapsulation dot1q 10
-exit
-l2vpn xconnect context VLAN10_NEIGHBOR
-member 1.1.1.1 10 encapsulation mpls
-member g6 service-instance 10
-exit
+interface Loopback0
+ ip address 10.3.3.3 255.255.255.255
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!! PW group redundancy
-! delete previos l2vpn config
-! PW redundancy work like spanning tree
-l2vpn xconnect context VLAN10_NEIGHBOR
-member 3.3.3.3 10 encapsulation mpls group GROUP priority 10
-member 3.3.3.3 11 encapsulation mpls group GROUP priority 11
-member g6 service-instance 10
+interface GigabitEthernet1
+ no shutdown
+ ip address 10.3.8.3 255.255.255.0
+ ip router isis 1
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!! interface PW
-! delete previos l2vpn config (only l1vpn config keep service-instance)
-int pseudowires 10
-encapsulation mpls
-neighbor 1.1.1.1 10
-exit
-int pseudowires 11
-encapsulation mpls
-neighbor 1.1.1.1 11
-l2vpn xconnect context VLAN10_W_PW
-member g6 service-instance 10
-member pseudowires 10
-exit
+interface GigabitEthernet2
+ no shutdown
+ ip address 10.3.4.3 255.255.255.0
+ ip router isis 1
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!! interface PW (PW group redundancy)
-l2vpn xconnect context VLAN10_W_PW
-no member pseudowires 10
-member pseudowires 10 group GROUP priority 10
-member pseudowires 11 group GROUP priority 11
-exit
+router isis 1
+ passive-interface Loopback0
+ mpls ldp autoconfig
 
+line con 0
+ exec-timeout 0 0
 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!! pseudowires template
-template type pseudowire PW_TEMP
-encapsulation mpls
-signaling protocol ldp
-status redundancy master
-sequencing both
-load-balance flow
-monitor peer bdf local interface g6
-do show run | sec temp
+int r g1-7
+ cdp en
 
-! pseudowires need to be re configured
-int pseudowire 10
-source template type pseudowire PW_TEMP
-int pseudowire 11
-source template type pseudowire PW_TEMP
-exit
-! pseudowires group switch over
-l2vpn redundancy activate interface pseudowire 11
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! VPLS config
-interface g6
-no ip address
-negotiation auto
-no keepalive
-no service-instance 10 ethernet
-
-bridge-domain 13
-no member g6 service-instance 1
-no bridge-domain 13
-
-service-instance 1 ethernet
-encapsulation default
-exit
-
-conf t
-interface pseudowire 13
-encapsulation mpls
-neighbor 1.1.1.1 13
-
-interface pseudowire 35
-encapsulation mpls
-neighbor 5.5.5.5 35
-exit
-
-l2vpn vfi context 135
-vpn id 135
-member pseudowire 13
-member pseudowire 35
-exit
-
-bridge-domain 135
-member vfi 135
-member g6 service-instance 1
+do wr
