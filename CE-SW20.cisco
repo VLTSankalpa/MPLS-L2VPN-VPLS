@@ -1,0 +1,35 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! VPLS With switches as the CE Device
+conf t
+vlan 100
+vlan 101
+
+int g0/0
+switchport trunk encapsulation dot1q
+switchport mode trunk
+media-type rj45
+negotiation auto
+
+int g0/1
+switchport access vlan 100
+switchport mode access
+media-type rj45
+negotiation auto
+spanning-tree portfast edge
+
+int g0/2
+switchport access vlan 101
+switchport mode access
+media-type rj45
+negotiation auto
+spanning-tree portfast edge
+
+vlan 200
+vlan 201
+int vlan 200
+ip add 10.1.200.20 255.255.255.0
+no shut
+int vlan 201
+ip add 10.1.201.20 255.255.255.0
+no shut

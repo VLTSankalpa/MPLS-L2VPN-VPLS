@@ -1,0 +1,139 @@
+! l2vpn = Xconnect
+! p2p pseudowires
+
+!!!!!!!!!!!!!!!!!!!!!!!!!! xconnect
+int g3
+no shut
+xconnect 3.3.3.3 31 encap mpls
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!! xconnect with Pseudowires class
+conf t
+Pseudowires-class PW_CLASS
+! lot of options like interworking, load balanceing under PW_CLASS
+encapsulation mpls
+exit
+int g3
+xconnect 1.1.1.1 31 pw-class PW_CLASS
+
+!!!!!!!!!!!!!!!!!!!!!!!!!! l2vpn (Pseudowires)
+int g3
+service instance 10 ethernet
+encap dot1q 10
+exit
+l2vpn xconnect context VLAN10_NEIGHBOR
+member 3.3.3.3 10 encap mpls
+member g3 service-instance 10
+exit
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!! PW group redundancy
+! delete previos l2vpn config
+! PW redundancy work like spanning tree
+l2vpn xconnect context VLAN10_NEIGHBOR
+member 1.1.1.1 10 encapsulation mpls group GROUP priority 10
+member 1.1.1.1 11 encapsulation mpls group GROUP priority 11
+member g3 service-instance 10
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!! interface PW
+! delete previos l2vpn config (only l1vpn config keep service-instance)
+int pseudowire 10
+encapsulation mpls
+neighbor 3.3.3.3 10
+exit
+int pseudowire 11
+encapsulation mpls
+neighbor 3.3.3.3 11
+exit
+l2vpn xconnect context VLAN10_W_PW
+member g3 service-instance 10
+member pseudowires 10
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!! interface PW (PW group redundancy)
+l2vpn xconnect context VLAN10_W_PW
+no member pseudowires 10
+member pseudowires 10 group GROUP priority 10
+member pseudowires 11 group GROUP priority 11
+exit
+do show l2vpn atom vc
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!! pseudowires template
+template type pseudowire PW_TEMP
+encapsulation mpls
+signaling protocol ldp
+status redundancy master
+sequencing both
+load-balance flow
+monitor peer bdf local interface g3
+do show run | sec temp
+
+! pseudowires need to be re configured
+int pseudowire 10
+source template type pseudowire PW_TEMP
+int pseudowire 11
+source template type pseudowire PW_TEMP
+exit
+! pseudowires group switch over
+l2vpn redundancy activate interface pseudowire 11
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! VPLS config
+int g3
+no ip address
+negotiation auto
+no keepalive
+no service-instance 10 ethernet
+
+service-instance 1 ethernet
+encapsulation default
+exit
+interface pseudowire 13
+encapsulation mpls
+neighbor 3.3.3.3 13
+
+interface pseudowire 15
+encapsulation mpls
+neighbor 5.5.5.5 15
+exit
+
+l2vpn vfi context 135
+vpn  id 135
+member pseudowire 13
+member pseudowire 13
+exit
+
+ bridge-domain 13
+no member g3 service-instance 1
+no bridge-domain 13
+
+bridge-domain 135
+member vfi 135
+member g3 service-instance 1
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+! VPLS With switches as the CE Device
+
+l2vpn vfi context 157
+vpn id 157
+member 7.7.7.7 17 encapsulation mpls
+member 5.5.5.5 15 encapsulation mpls
+exit
+
+int g5
+no ip address
+no shut
+negotiation auto
+Service-instance 157 ethernet
+encapsulation dot1q 100-101
+exit
+
+bridge-domain 157
+member vfi 157
+member g5 service-instance 157
+
+int g5
+Service-instance 157 ethernet
+encapsulation dot1q 100-101,200-201
+
+do show bridge-domain 157
+do show mpls l2 vc
