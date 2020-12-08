@@ -1,0 +1,6 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!! xconnect
+conf t
+int g2
+ip add 10.13.15.15 255.255.255.0
+no shut
+do wr

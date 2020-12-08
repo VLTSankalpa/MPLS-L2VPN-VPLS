@@ -1,0 +1,14 @@
+!!!!!!!!!!!!!!!!!!!!!!!!!! xconnect
+conf t
+hostn CE13
+cdp run
+
+int r g 0/0 - 3
+cdp enable
+
+int g0/0
+no shut
+ip add 10.13.15.13 255.255.255.0
+do wr
+
+do ping 10.13.15.15
