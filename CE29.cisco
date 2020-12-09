@@ -1,0 +1,13 @@
+! VPLS config
+conf t
+hostn CE29
+cdp run
+
+int g0/0
+no ip address
+no shut
+cdp enable
+
+int g0/1.60
+encapsulation dot1q 60
+ip add 10.1.145.13 255.255.255.0

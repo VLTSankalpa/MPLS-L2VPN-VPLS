@@ -1,0 +1,5 @@
+! VPLS config
+conf t
+int g0/0.60
+encapsulation dot1q 60
+ip add 10.1.145.16 255.255.255.0

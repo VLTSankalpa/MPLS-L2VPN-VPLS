@@ -1,72 +1,33 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ! VPLS config
-
 conf t
-
-int g3
-service-instance 1 ethernet
-encapsulation default
+int g7
+no ip address
+negotiation auto
+no keepalive
+service instance 1357 ethernet
+encapsulation dot1q 1357
 exit
 
 interface pseudowire 15
 encapsulation mpls
-neighbor 1.1.1.1 15
+neighbor 10.1.1.1 15
 
 interface pseudowire 35
 encapsulation mpls
-neighbor 3.3.3.3 35
+neighbor 10.3.3.3 35
+
+interface pseudowire 57
+encapsulation mpls
+neighbor 10.7.7.7 57
 exit
 
-l2vpn vfi context 135
-vpn  id 135
+l2vpn vfi context 1357
+vpn  id 1357
 member pseudowire 15
 member pseudowire 35
-exit
-
-bridge-domain 135
-member vfi 135
-member g3 service-instance 1
-
-!!! note
-! now we can try to configure any type 0f IGP in beetween R1, R3 and R4
-! In a case that CE devices are not router mac address flood control is also import
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! VPLS With switches as the CE Device
-
-int port-channel 1
-exit
-
-int r g5 -6
-channel-group 1 mode
-no shut
-exit
-
-int port-channel 1
-service-instance 157 ethernet
-encapsulation dot1q 100-101
-exit
-
-int pseudowire 51
-encapsulation mpls
-neighbor 1.1.1.1 51
-
-int pseudowire 57
-encapsulation mpls
-neighbor 7.7.7.7 57
-
-l2vpn vfi context 157
-vpn id 157
-member pseudowire 51
 member pseudowire 57
 exit
 
-bridge-domain 157
-member vfi 157
-member port-channel 1 service-instance 157
-
-int port-channel 1
-Service-instance 157 ethernet
-encapsulation dot1q 100-101,200-201
+bridge-domain 1357
+member vfi 1357
+member g7 service-instance 1357

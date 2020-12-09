@@ -1,39 +1,33 @@
+! VPLS config
 conf t
-int g3
-no shut
-service instance 10 ethernet
-encapsulation default
-exit
-interface pseudowire 10
-encapsulation mpls
-neighbor 10.0.0.10 10
-exit
-l2vpn xconnect context P2P_VLAN_IOS_XR
-member g3 service-instance 10
-member pseudowire 10
-exit
-
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-! VPLS With switches as the CE Device
-l2vpn vfi context 157
-vpn id 157
-member 1.1.1.1 17 encapsulation mpls
-member 5.5.5.5 57 encapsulation mpls
-exit
-
-int g4
+int g7
 no ip address
-no shut
 negotiation auto
-Service-instance 157 ethernet
-encapsulation dot1q 100-101
+no keepalive
+service instance 1357 ethernet
+encapsulation dot1q 1357
 exit
 
-bridge-domain 157
-member vfi 157
-member g4 service-instance 157
+interface pseudowire 17
+encapsulation mpls
+neighbor 10.1.1.1 17
 
-int g4
-Service-instance 157 ethernet
-encapsulation dot1q 100-101,200-201
+interface pseudowire 37
+encapsulation mpls
+neighbor 10.3.3.3 37
+
+interface pseudowire 57
+encapsulation mpls
+neighbor 10.5.5.5 57
+exit
+
+l2vpn vfi context 1357
+vpn  id 1357
+member pseudowire 17
+member pseudowire 37
+member pseudowire 57
+exit
+
+bridge-domain 1357
+member vfi 1357
+member g7 service-instance 1357
