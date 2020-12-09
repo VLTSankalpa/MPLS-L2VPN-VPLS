@@ -1,13 +1,23 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!! pw-group-redundancy
+!!!!!!!!!!!!!!!!!!!!!!!!!! pw-int-and-redundancy
 conf t
 
 int g3
-service instance 30 ethernet
-encap dot1q 30
+service instance 40 ethernet
+encap dot1q 40
 exit
-l2vpn xconnect context VLAN30_NEIGHBOR
-member 10.1.1.1 30 encapsulation mpls group GROUP priority 10
-member 10.1.1.1 31 encapsulation mpls group GROUP priority 11
-member g3 service-instance 30
+
+interface pseudowire 40
+encapsulation mpls
+neighbor 10.1.1.1 40
+exit
+interface pseudowire 41
+encapsulation mpls
+neighbor 10.1.1.1 41
+exit
+
+l2vpn xconnect context VLAN40_NEIGHBOR
+member g3 service-instance 40
+member pseudowire 40 group GROUP priority 10
+member pseudowire 41 group GROUP priority 11
 exit
 do wr
