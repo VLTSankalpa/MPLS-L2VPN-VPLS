@@ -2,22 +2,30 @@
 conf t
 
 int g3
-service instance 40 ethernet
-encap dot1q 40
+service instance 50 ethernet
+encap dot1q 50
 exit
 
-interface pseudowire 40
+template type pseudowire PW_TEMP
 encapsulation mpls
-neighbor 10.1.1.1 40
+signaling protocol ldp
+status redundancy master
+sequencing both
+load-balance flow
+monitor peer bfd local interface g3
+
+interface pseudowire 50
+source template type pseudowire PW_TEMP
+neighbor 10.1.1.1 50
 exit
-interface pseudowire 41
-encapsulation mpls
-neighbor 10.1.1.1 41
+interface pseudowire 51
+source template type pseudowire PW_TEMP
+neighbor 10.1.1.1 51
 exit
 
-l2vpn xconnect context VLAN40_NEIGHBOR
-member g3 service-instance 40
-member pseudowire 40 group GROUP priority 10
-member pseudowire 41 group GROUP priority 11
+l2vpn xconnect context VLAN50_NEIGHBOR
+member g3 service-instance 50
+member pseudowire 50 group GROUP priority 10
+member pseudowire 51 group GROUP priority 11
 exit
 do wr

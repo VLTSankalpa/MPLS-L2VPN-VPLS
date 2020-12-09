@@ -1,7 +1,7 @@
 !!!!!!!!!!!!!!!!!!!!!!!!!! pw-int-and-redundancy
 conf t
 
-int g0/0.40
-encapsulation dot1q 40
-ip add 40.13.16.16 255.255.255.0
+int g0/0.50
+encapsulation dot1q 50
+ip add 50.13.16.16 255.255.255.0
 do wr
