@@ -2,10 +2,11 @@
 conf t
 int g7
 no ip address
+no shut
 negotiation auto
 no keepalive
 service instance 1357 ethernet
-encapsulation dot1q 1357
+encapsulation default
 exit
 
 interface pseudowire 15

@@ -1,11 +1,12 @@
 ! VPLS config
 conf t
-int g7
+int g5
 no ip address
+no shut
 negotiation auto
 no keepalive
 service instance 1357 ethernet
-encapsulation dot1q 1357
+encapsulation default
 exit
 
 interface pseudowire 17
@@ -30,4 +31,4 @@ exit
 
 bridge-domain 1357
 member vfi 1357
-member g7 service-instance 1357
+member g5 service-instance 1357
