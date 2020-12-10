@@ -1,9 +1,0 @@
-! VPLS config
-conf t
-hostn CE29
-cdp run
-
-int g0/0
-ip add 10.13.57.29 255.255.255.0
-no shut
-cdp enable

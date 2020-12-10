@@ -1,34 +1,26 @@
-! VPLS config
+! VPLS With switches as the CE Device
 conf t
-int g6
+int g5
 no ip address
 no shut
 negotiation auto
 no keepalive
-service instance 1357 ethernet
-encapsulation default
+service instance 157 ethernet
+encapsulation dot1q 100-101
 exit
 
-interface pseudowire 13
-encapsulation mpls
-neighbor 10.3.3.3 13
-
-interface pseudowire 15
-encapsulation mpls
-neighbor 10.5.5.5 15
-
-interface pseudowire 17
-encapsulation mpls
-neighbor 10.7.7.7 17
+l2vpn vfi context 157
+vpn id 157
+member 10.7.7.7 15717 encapsulation mpls
+member 10.5.5.5 15715 encapsulation mpls
 exit
 
-l2vpn vfi context 1357
-vpn  id 1357
-member pseudowire 13
-member pseudowire 15
-member pseudowire 17
-exit
+bridge-domain 157
+member vfi 157
+member g5 service-instance 157
 
-bridge-domain 1357
-member vfi 1357
-member g6 service-instance 1357
+int g5
+Service instance 157 ethernet
+encapsulation dot1q 100-101,200-201
+
+do wr
