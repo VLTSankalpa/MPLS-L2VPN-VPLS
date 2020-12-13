@@ -12,6 +12,11 @@ exit
 l2 vfi BGP_AD autodiscovery
 vpn id 1000
 bridge-domain 1000
+route-target export 1:7
+route-target import 1:1
+route-target import 1:3
+route-target import 1:5
+no auto-route-target
 
 router bgp 1
 no bgp def ipv4
