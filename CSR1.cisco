@@ -2,6 +2,7 @@
 
 conf t
 int g3
+no shut
 service instance 1000 ethernet
 encapsulation dot1q 1000
 bridge-domain 1000
