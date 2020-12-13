@@ -27,3 +27,4 @@ neighbor 10.8.8.8 remote-as 1
 neighbor 10.8.8.8 update-source loopback 0
 address-family l2vpn vpls
 neighbor 10.8.8.8 activate
+do wr
