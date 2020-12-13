@@ -1,39 +1,29 @@
-! VPLS With switches as the CE Device
+! VPLS E-LAN BGP Auto Discovery with LDP Signaling
 
 conf t
-int port-channel 1
+int g3
+service instance 1000 ethernet
+encapsulation dot1q 1000
+bridge-domain 1000
+exit
 exit
 
-int r g5 -6
-channel-group 1 mode
-no shut
+l2 vfi context BGP_AD
+vpn id 1000
+autodiscovery bgp signaling ldp
+auto-route-target
+exit
 exit
 
-int port-channel 1
-service instance 157 ethernet
-encapsulation dot1q 100-101
-exit
+bridge-domain 1000
+member g3 service-instance 1000
+member vfi BGP_AD
 
-int pseudowire 15715
-encapsulation mpls
-neighbor 10.1.1.1 15715
 
-int pseudowire 15757
-encapsulation mpls
-neighbor 10.7.7.7 15757
 
-l2vpn vfi context 157
-vpn id 157
-member pseudowire 15715
-member pseudowire 15757
-exit
-
-bridge-domain 157
-member vfi 157
-member port-channel 1 service-instance 157
-
-int port-channel 1
-Service instance 157 ethernet
-encapsulation dot1q 100-101,200-201
-
-do wr
+router bgp 1
+no bgp def ipv4
+neighbor 10.8.8.8 remote-as 1
+neighbor 10.8.8.8 update-source loopback 0
+address-family l2vpn vpls
+neighbor 10.8.8.8 activate

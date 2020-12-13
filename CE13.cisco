@@ -1,0 +1,14 @@
+! VPLS With switches as the CE Device
+en
+conf t
+hostn CE13
+cdp run
+
+int r g0/0-3
+no shut
+cdp enable
+
+int g0/0.1000
+encapsulation dot1q 1000
+ip add 10.100.100.13 255.255.255.0
+do wr

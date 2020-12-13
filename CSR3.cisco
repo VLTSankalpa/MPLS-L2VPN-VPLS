@@ -1,8 +1,10 @@
 ! VPLS E-LAN BGP Auto Discovery with LDP Signaling
+
 conf t
-int g3
+int g4
 service instance 1000 ethernet
 encapsulation dot1q 1000
+bridge-domain 1000
 exit
 exit
 
@@ -14,7 +16,7 @@ exit
 exit
 
 bridge-domain 1000
-member g3 service-instance 1000
+member g4 service-instance 1000
 member vfi BGP_AD
 
 router bgp 1

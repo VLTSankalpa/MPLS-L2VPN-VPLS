@@ -1,0 +1,20 @@
+! VPLS E-LAN BGP Auto Discovery with LDP Signaling
+
+en
+conf t
+router bgp 1
+no bgp def ipv4
+neighbor IBGP peer-group
+neighbor IBGP remote-as 1
+neighbor IBGP update-source loopback 0
+
+neighbor 10.1.1.1 peer-group IBGP
+neighbor 10.3.3.3 peer-group IBGP
+neighbor 10.5.5.5 peer-group IBGP
+neighbor 10.7.7.7 peer-group IBGP
+address-family l2vpn vpls
+neighbor IBGP route-reflector-client
+neighbor 10.1.1.1 activate
+neighbor 10.3.3.3 activate
+neighbor 10.5.5.5 activate
+neighbor 10.7.7.7 activate

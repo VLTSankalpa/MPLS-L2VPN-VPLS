@@ -1,13 +1,15 @@
 ! VPLS With switches as the CE Device
 en
 conf t
-hostn CE26
+hostn CE16
 cdp run
 
 int r g0/0-3
+no shut
 cdp enable
 
 int g0/0
-ip add 10.1.101.26 255.255.255.0
+encapsulation dot1q 1000
+ip add 10.100.100.16 255.255.255.0
 no shut
 do wr
