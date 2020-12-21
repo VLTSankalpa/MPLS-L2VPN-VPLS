@@ -16,6 +16,7 @@
 
 ### Pseudo-wire (PW) interface and group redundancy
 [pw-group-redundancy branch](https://github.com/VLTSankalpa/MPLS-L2VPN-VPLS/tree/pw-group-redundancy)
+
 [pw-interface-and-group-redundancy branch](https://github.com/VLTSankalpa/MPLS-L2VPN-VPLS/tree/pw-interface-and-group-redundancy)
 
 ### Pseudo-wire (PW) template
@@ -29,6 +30,7 @@
 
 ### VPLS E-TREE BGP Auto Discovery with LDP Signaling
 [VPLS-E-LAN-BGP-auto-discovery-with-LDP-signaling branch](https://github.com/VLTSankalpa/MPLS-L2VPN-VPLS/tree/VPLS-E-LAN-BGP-auto-discovery-with-LDP-signaling)
+
 [VPLS-E-TREE-BGP-auto-discovery-with-LDP-signaling branch](https://github.com/VLTSankalpa/MPLS-L2VPN-VPLS/tree/VPLS-E-TREE-BGP-auto-discovery-with-LDP-signaling)
 
 ### Hierarchical VPLS
