@@ -1,4 +1,7 @@
 # MPLS L2-VPN LAB
+
+![Picture3](https://user-images.githubusercontent.com/55949652/102808363-3c693900-43e6-11eb-99cc-671f66b70416.png)
+
 ## LAB OBJECTIVES 
 
 ### IP addressing, IGP and LDP design in SP CORE
